@@ -21,10 +21,10 @@ const userSchema = new mongoose.Schema({
       enum: ["user", "admin"],
       default: "user",
    },
-   ticket: {
+   ticket:[ {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Ticket",
-   },
+   }],
 });
 
 userSchema.pre("save", async function (next) {
