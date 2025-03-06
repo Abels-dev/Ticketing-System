@@ -5,5 +5,6 @@ dotenv.config();
 export const ENV_VARS={
     MONGO_URL:process.env.MONGO_URL,
     PORT:process.env.PORT,
-    JWT_SECRET:process.env.JWT_SECRET
+    JWT_SECRET:process.env.JWT_SECRET,
+    NODE_ENV:process.env.NODE_ENV,
 }
