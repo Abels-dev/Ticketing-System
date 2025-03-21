@@ -5,6 +5,7 @@ import {LoginPage} from './pages/LoginPage'
 import {Toaster} from 'react-hot-toast'
 import { useAuthStore } from "./store/authStore"
 import { useEffect } from "react"
+import { CreatePage } from "./pages/CreatePage"
 function App() {
   const {user,checkAuth,isCheckingAuth}=useAuthStore();
   useEffect(()=>{
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element={user?<HomePage/>:<Navigate to={"/signup"}/>}/>
           <Route path="/signup" element={(!user)?<SignupPage/>:<Navigate to={"/"}/>}/>
           <Route path="/login" element={(!user)?<LoginPage/>:<Navigate to={"/"}/>}/>
+          <Route path="/create" element={user?<CreatePage/>:<Navigate to={"/signup"}/>}/>
        </Routes>
        <Toaster/>
     </>
