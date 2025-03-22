@@ -29,7 +29,7 @@ export const createTicket = async (req, res) => {
 
 export const getMyTickets = async (req, res) => {
       try {
-          const tickets = await Ticket.find({ user: req.user._id });
+          const tickets = await Ticket.find({ user: req.user._id }).sort({ createdAt: -1 });
           res.status(200).json({ success: true, tickets });
       } catch (error) {
         res.status(500).json({ success: false, message: "Internal Server Error" });
