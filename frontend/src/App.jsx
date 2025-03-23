@@ -6,6 +6,7 @@ import {Toaster} from 'react-hot-toast'
 import { useAuthStore } from "./store/authStore"
 import { useEffect } from "react"
 import { CreatePage } from "./pages/CreatePage"
+import { DetailPage } from "./pages/DetailPage"
 function App() {
   const {user,checkAuth,isCheckingAuth}=useAuthStore();
   useEffect(()=>{
@@ -25,6 +26,7 @@ function App() {
           <Route path="/signup" element={(!user)?<SignupPage/>:<Navigate to={"/"}/>}/>
           <Route path="/login" element={(!user)?<LoginPage/>:<Navigate to={"/"}/>}/>
           <Route path="/create" element={user?<CreatePage/>:<Navigate to={"/signup"}/>}/>
+          <Route path="/details/:id" element={user?<DetailPage/>:<Navigate to={"/signup"}/>}/>
        </Routes>
        <Toaster/>
     </>
