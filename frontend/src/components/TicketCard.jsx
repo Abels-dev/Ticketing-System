@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export const TicketCard = ({ ticket }) => {
    const formattedDate = new Date(ticket.createdAt).toLocaleDateString(
@@ -12,7 +13,9 @@ export const TicketCard = ({ ticket }) => {
    return (
       <div className="bg-white shadow-lg rounded-lg p-4 text-slate-900 relative flex flex-col justify-between">
          <div className="flex justify-between items-center gap-6">
-            <h2 className="text-xl font-bold">{ticket.issue}</h2>
+            <Link to={`details/${ticket._id}`}>
+               <h2 className="text-xl font-bold hover:underline">{ticket.issue}</h2>
+            </Link>
             <p
                className={`font-bold capitalize  ${
                   ticket.priority === "low"
