@@ -3,22 +3,23 @@ import { NavBar } from "../components/NavBar";
 import { TicketCard } from "../components/TicketCard";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import { useTicketStore } from "../store/ticketStore";
 export const HomePage = () => {
   const [tickets,setTickets]=useState([]);
-  
+  const {isUpdated,setIsUpdated}=useTicketStore();
   useEffect(()=>{
     const fetchTickets=async()=>{
         try {
           const res=await axios.get("/api/tickets/mytickets");
           setTickets(res.data.tickets);
+          setIsUpdated(false);
         } catch (error) {
           console.log(error);
           toast.error("Failed to fetch tickets");
         }
     }
     fetchTickets();
-  },[])
+  },[isUpdated,setIsUpdated])
 
   if(tickets.length===0){
     return (

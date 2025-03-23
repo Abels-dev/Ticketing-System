@@ -3,11 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { NavBar } from "../components/NavBar";
+import { useAuthStore } from "../store/authStore";
+import { useTicketStore } from "../store/ticketStore";
 
 export const DetailPage = () => {
+   const {user}=useAuthStore();
+   const {isUpdated,setIsUpdated}=useTicketStore();
    const navigate=useNavigate();
    const { id } = useParams();
    const [ticketDetail, setTicketDetail] = useState({});
+   const [activeStatus, setActiveStatus] = useState(ticketDetail.status||"");
 
    const handleDelete=async()=>{
          try {
@@ -17,12 +22,12 @@ export const DetailPage = () => {
              console.log(error.message);
          }
    }
-
    useEffect(() => {
       const getTicketDetail = async () => {
          try {
             const response = await axios.get("/api/tickets/" + id);
             setTicketDetail(response.data.ticket);
+            setIsUpdated(false);
          } catch (error) {
             console.log("Error in getTicketDetail", error.message);
             toast.error(
@@ -32,7 +37,7 @@ export const DetailPage = () => {
          }
       };
       getTicketDetail();
-   }, [id]);
+   }, [id,isUpdated,setIsUpdated]);
    const formattedDate = new Date(ticketDetail.createdAt).toLocaleDateString(
       "en-US",
       {
@@ -41,16 +46,40 @@ export const DetailPage = () => {
          day: "numeric",
       }
    );
+   const handleStatusChange=async()=>{
+        try {
+            await axios.put(`/api/tickets/${id}`,{status:activeStatus});
+            setIsUpdated(true);
+        } catch (error) {
+            console.log(error.message);
+        }
+   }
+   const statusChangeBtns=(
+      <div className="flex flex-col items-center gap-3">
+         <p className="font-bold text-slate-700 text-lg text-center mb-1">Change The status</p>
+         <div className="flex items-center gap-3 flex-wrap">
+                <button className={`px-4 py-2 rounded text-slate-200
+                ${activeStatus==="Open"?"bg-red-600":"bg-gray-800"} hover:bg-red-700`} onClick={()=>setActiveStatus("Open")}>Open</button>
+                <button className={`px-4 py-2 rounded text-slate-200
+                ${activeStatus==="In-progress"?"bg-red-600":"bg-gray-800"} hover:bg-red-700`} onClick={()=>setActiveStatus("In-progress")}>In-progress</button>
+                <button className={`px-4 py-2 rounded text-slate-200
+                ${activeStatus==="Resolved"?"bg-red-600":"bg-gray-800"} hover:bg-red-700`} onClick={()=>setActiveStatus("Resolved")}>Resolved</button>
+                <button className={`px-4 py-2 rounded text-slate-200
+                ${activeStatus==="Closed"?"bg-red-600":"bg-gray-800"} hover:bg-red-700`} onClick={()=>setActiveStatus("Closed")}>Closed</button>
+         </div>
+         <button className="px-4 py-2 rounded bg-green-600 hover:bg-green-700 text-slate-200" onClick={handleStatusChange}>Save</button>
+      </div>
+   )
    return (
       <div className="h-screen bg-slate-100">
          <NavBar />
          <div className="max-w-6xl mx-auto mt-16">
-            <div className="flex justify-between items-center mt-5">
+            <div className="flex justify-between items-center mt-5 gap-1">
                <h1 className="font-bold text-3xl text-slate-900  p-2 capitalize">
                   {ticketDetail.issue}
                </h1>
-               <button className="flex items-center justify-center gap-2 font-bold text-lg
-                text-slate-200 p-2 px-4 rounded-md mr-3 bg-red-600 hover:bg-red-500" onClick={handleDelete}>Delete</button>
+               {user.role==="admin" ?statusChangeBtns:<button className="flex items-center justify-center gap-2 font-bold text-lg
+                text-slate-200 p-2 px-4 rounded-md mr-3 bg-red-600 hover:bg-red-500" onClick={handleDelete}>Delete</button>}
             </div>
             <div className="pl-3">
                <span
