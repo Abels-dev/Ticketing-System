@@ -7,6 +7,7 @@ import { useAuthStore } from "./store/authStore"
 import { useEffect } from "react"
 import { CreatePage } from "./pages/CreatePage"
 import { DetailPage } from "./pages/DetailPage"
+import { AdminPage } from "./pages/AdminPage"
 function App() {
   const {user,checkAuth,isCheckingAuth}=useAuthStore();
   useEffect(()=>{
@@ -22,11 +23,12 @@ function App() {
   return (
     <>
        <Routes>
-          <Route path="/" element={user?<HomePage/>:<Navigate to={"/signup"}/>}/>
+          <Route path="/" element={user?(user.role==="admin"?<Navigate to={"/admin"}/>:<HomePage/>):<Navigate to={"/signup"}/>}/>
           <Route path="/signup" element={(!user)?<SignupPage/>:<Navigate to={"/"}/>}/>
           <Route path="/login" element={(!user)?<LoginPage/>:<Navigate to={"/"}/>}/>
           <Route path="/create" element={user?<CreatePage/>:<Navigate to={"/signup"}/>}/>
           <Route path="/details/:id" element={user?<DetailPage/>:<Navigate to={"/signup"}/>}/>
+          <Route path="/admin"  element={(user&&user.role==="admin")?<AdminPage/>:<Navigate to={"/login"}/>}/>
        </Routes>
        <Toaster/>
     </>
