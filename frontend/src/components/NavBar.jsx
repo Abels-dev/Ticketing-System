@@ -10,7 +10,6 @@ export const NavBar = () => {
         <nav className="flex items-center gap-8 font-bold">
             <Link to={'/'} className="hover:underline hover:text-slate-600">Home</Link>
             <Link to={'/create'} className="hover:underline hover:text-slate-600">CreateTicket</Link>
-            <Link to={'/about'} className="hover:underline hover:text-slate-600">About</Link>
             <div className="flex items-center gap-2">
             <LogOut className="size-8 cursor-pointer" onClick={()=>logout()}/>
             <div className="size-10 rounded-full bg-red-800
