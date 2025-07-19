@@ -3,7 +3,7 @@ import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 
 export const signUp = async (req, res) => {
    try {
-      const { name, email, password } = req.body;
+      const { name, email, password,role } = req.body;
       const { error } = validateUser({ name, email, password });
 
       if (error)
@@ -12,7 +12,7 @@ export const signUp = async (req, res) => {
       if (emailExists) {
          return res.status(400).json({  success:false,message: "Email already exists" });
       }
-      const user = await User.create({ name, email, password });
+      const user = await User.create({ name, email, password,role });
       generateTokenAndSetCookie(user, res);
       res.status(201).json({ success:true,user: { ...user._doc, password: "" }});
    } catch (error) {
